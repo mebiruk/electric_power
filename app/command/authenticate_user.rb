@@ -19,11 +19,10 @@ class AuthenticateUser
     # end
     
     def call
-        if user = User.find_by(username: @username)&.authenticate(@password_digest)
-          return user
-        else
-          errors.add(:base, :failure)
-        end
+      user = User.find_by_username(username)
+      return user if user && user.authenticate(password_digest)
+  
+      errors.add :customer_authentication, 'invalid credentials'
         nil
     end
 end
