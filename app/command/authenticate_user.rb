@@ -18,7 +18,7 @@ class AuthenticateUser
 
     # end
     
-    def customer
+    def call
         if user = User.find_by(username: @username)&.authenticate(@password_digest)
           return user
         else

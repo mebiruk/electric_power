@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  post 'home', to: 'authentication_user#customer'
+  post 'home', to: 'authentication_user#login'
   #address routes
   post 'addAddress', to: 'address#create'
   get 'address', to: 'address#all'
