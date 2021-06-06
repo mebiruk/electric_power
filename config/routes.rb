@@ -28,7 +28,9 @@ Rails.application.routes.draw do
   get 'findEnergyMeter/:id', to: 'energy_meter#find'
   put 'updateEnergyMeter/:id', to: 'energy_meter#update'
   get 'deleteEnergyMeter/:id', to: 'energy_meter#delete'
-
+  get 'userEnergyPerHour/:user_id', to: 'energy_meter#find_user_energy_hour'
+  get 'userEnergyPerMinute/:user_id', to: 'energy_meter#find_user_energy_minute'
+  get 'userEnergyPerWeek/:user_id', to: 'energy_meter#find_user_energy_week'
   #due_balance routes
   post 'addDueBalance', to: 'due_balance#create'
   get 'dueBalances', to: 'due_balance#all'

@@ -1,8 +1,35 @@
 class EnergyMeterController < ApplicationController
 
     def all
-        @energyMeter = EnergyMeter.all
+        @energyMeter = EnergyMeter.limit(100)
         render json:@energyMeter, status: 200
+    end
+
+    def find_user_energy_hour
+        @time = Date.strpdate(params[:date],'%Y/%m/%d')
+        @energyMeter = EnergyMeter.where(["EXTRACT(HOUR FROM time) BETWEEN ? AND ?", 0, 23]).limit(288)
+        @sg = @energyMeter.where("DATE(date) = ?", @time)
+        @msg = @sg.where("user_id = #{params[:user_id]}")
+        render json: @msg
+    end
+
+    def find_user_energy_minute
+        @time = Time.strptime(params[:time],'%H')
+        @date = Date.strptime(params[:date],'%Y/%m/%d')
+        t = @time.strftime('%H')
+        @energyMeter = EnergyMeter.where(["EXTRACT(HOUR FROM time) BETWEEN ? AND ?", t, t]).limit(288)
+        @sg = @energyMeter.where("DATE(date) = ?", @date)
+        @msg = @sg.where("user_id = #{params[:user_id]}")
+        render json: @msg
+    end
+
+    def find_user_energy_week
+        @start_date = Date.strptime(params[:date],'%Y/%m/%d')
+        @end_date = DateTime.strptime(params[:date],'%Y/%m/%d') + 7
+        @energyMeter = EnergyMeter.where("DATE(date) < ?",@end_date)
+        @energyMeter = @energyMeter.where("DATE(date) >= ?",@start_date)
+        @msg = @energyMeter.where("user_id = #{params[:user_id]}")
+        render json: @msg
     end
 
     def find
