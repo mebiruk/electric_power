@@ -31,6 +31,10 @@ Rails.application.routes.draw do
   get 'userEnergyPerHour/:user_id', to: 'energy_meter#find_user_energy_hour'
   get 'userEnergyPerMinute/:user_id', to: 'energy_meter#find_user_energy_minute'
   get 'userEnergyPerWeek/:user_id', to: 'energy_meter#find_user_energy_week'
+  get 'userEnergyPerMonth/:user_id', to: 'energy_meter#find_user_energy_month'
+  get 'userEnergyHighConsumption/:user_id', to: 'energy_meter#find_high_consumption_hour'
+  get 'userEnergyDayHighConsumption/:user_id', to: 'energy_meter#high_consumption_hour'
+  
   #due_balance routes
   post 'addDueBalance', to: 'due_balance#create'
   get 'dueBalances', to: 'due_balance#all'
