@@ -63,8 +63,10 @@ class EnergyMeterController < ApplicationController
         @start_date = Date.strptime(params[:date],'%Y/%m/%d')
         @end_date = DateTime.strptime(params[:date],'%Y/%m/%d') - 6.days
         @em = Array.new
+        @order = Array.new
         for a in 0..6 do  
-            @energyMeter = EnergyMeter.where("DATE(date) <= ?",@end_date)
+            @order << @end_date + a
+            @energyMeter = EnergyMeter.where("DATE(date) <= ?",@order[a])
             @msg = @energyMeter.where("user_id = #{params[:user_id]}")
             @power = @msg.sum(:power)
             @power_avg = @power/ 7
@@ -72,8 +74,7 @@ class EnergyMeterController < ApplicationController
             @power_factor_avg = @power_factor / 7
             @user_id = @msg.select(:user_id)
             @date = @msg.select(:date)
-            @em << MyClass.new(@power_avg,@power_factor_avg,@end_date,a,params[:user_id])
-            @end_date + a
+            @em << MyClass.new(@power_avg,@power_factor_avg,@order[a],a,params[:user_id])            
         end
         render json: @em
     end
@@ -91,10 +92,26 @@ class EnergyMeterController < ApplicationController
     def find_user_energy_month
         @start_date = Date.strptime(params[:date],'%Y/%m/%d')
         @end_date = DateTime.strptime(params[:date],'%Y/%m/%d') - 30.days
-        @energyMeter = EnergyMeter.where("DATE(date) <= ?",@start_date)
-        @energyMeter = @energyMeter.where("DATE(date) > ?",@end_date)
-        @msg = @energyMeter.where("user_id = #{params[:user_id]}")
-        render json: @msg
+        @em = Array.new
+        @order = Array.new
+        # @energyMeter = EnergyMeter.where("DATE(date) <= ?",@start_date)
+        # @energyMeter = @energyMeter.where("DATE(date) > ?",@end_date)
+        # @msg = @energyMeter.where("user_id = #{params[:user_id]}")
+        for a in 0..29 do  
+            @order << @end_date + a
+            # @energyMeter = EnergyMeter.where("DATE(date) <= ?",@order[a])
+            @energyMeter = EnergyMeter.where("DATE(date) <= ?",@order[a])
+            # @energyMeter = @energyMeter.where("DATE(date) > ?",@end_date)
+            @msg = @energyMeter.where("user_id = #{params[:user_id]}")
+            @power = @msg.sum(:power)
+            @power_avg = @power/ 7
+            @power_factor = @msg.sum(:power_factor)
+            @power_factor_avg = @power_factor / 7
+            @user_id = @msg.select(:user_id)
+            @date = @msg.select(:date)
+            @em << MyClass.new(@power_avg,@power_factor_avg,@order[a],a,params[:user_id])            
+        end
+        render json: @em
     end
 
 
