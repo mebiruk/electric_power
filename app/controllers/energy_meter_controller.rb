@@ -18,7 +18,7 @@ class EnergyMeterController < ApplicationController
             @power_factor_avg = @power_factor 
             @user_id = @msg.select(:user_id)
             @date = @msg.select(:date)
-            @em << MyClass.new(@power_avg,@power_factor_avg,@time,a,params[:user_id])
+            @em << MyClass.new(@power_avg,@power_factor,@time,a,params[:user_id])
         end
         render json: @em
     end
@@ -74,7 +74,7 @@ class EnergyMeterController < ApplicationController
             @power_factor_avg = @power_factor / 7
             @user_id = @msg.select(:user_id)
             @date = @msg.select(:date)
-            @em << MyClass.new(@power_avg,@power_factor_avg,@order[a],a,params[:user_id])            
+            @em << MyClass.new(@power_avg,@power_factor,@order[a],a,params[:user_id])            
         end
         render json: @em
     end
@@ -109,7 +109,7 @@ class EnergyMeterController < ApplicationController
             @power_factor_avg = @power_factor / 7
             @user_id = @msg.select(:user_id)
             @date = @msg.select(:date)
-            @em << MyClass.new(@power_avg,@power_factor_avg,@order[a],a,params[:user_id])            
+            @em << MyClass.new(@power_avg,@power_factor,@order[a],a,params[:user_id])            
         end
         render json: @em
     end
