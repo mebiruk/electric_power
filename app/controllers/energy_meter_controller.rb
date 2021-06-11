@@ -14,7 +14,7 @@ class EnergyMeterController < ApplicationController
             @msg = @sg.where("user_id = #{params[:user_id]}")
             @power = @msg.sum(:power)
             @power_avg = @power
-            @power_factor = @msg.sum(:power_factor)
+            @power_factor = @msg.minimum(:power_factor)
             @power_factor_avg = @power_factor 
             @user_id = @msg.select(:user_id)
             @date = @msg.select(:date)
@@ -70,7 +70,7 @@ class EnergyMeterController < ApplicationController
             @msg = @energyMeter.where("user_id = #{params[:user_id]}")
             @power = @msg.sum(:power)
             @power_avg = @power/ 7
-            @power_factor = @msg.sum(:power_factor)
+            @power_factor = @msg.minimum(:power_factor)
             @power_factor_avg = @power_factor / 7
             @user_id = @msg.select(:user_id)
             @date = @msg.select(:date)
@@ -104,9 +104,10 @@ class EnergyMeterController < ApplicationController
             # @energyMeter = @energyMeter.where("DATE(date) > ?",@end_date)
             @msg = @energyMeter.where("user_id = #{params[:user_id]}")
             @power = @msg.sum(:power)
-            @power_avg = @power/ 7
-            @power_factor = @msg.sum(:power_factor)
-            @power_factor_avg = @power_factor / 7
+            @power_avg = @power/ 30
+            @power_factor = @msg.minimum(:power_factor)
+            
+            # @power_factor_avg =@msg.select(:power_factor)
             @user_id = @msg.select(:user_id)
             @date = @msg.select(:date)
             @em << MyClass.new(@power_avg,@power_factor,@order[a],a,params[:user_id])            
