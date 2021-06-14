@@ -9,7 +9,7 @@ class EnergyMeterController < ApplicationController
         @em = Array.new
         @time = Date.strptime(params[:date],'%Y/%m/%d')
         for a in 0..23 do  
-            @energyMeter = EnergyMeter.where(["EXTRACT(HOUR FROM time) BETWEEN ? AND ?", a, a]).limit(288)
+            @energyMeter = EnergyMeter.where(["EXTRACT(HOUR FROM time) BETWEEN ? AND ?", a, a])
             @sg = @energyMeter.where("DATE(date) = ?", @time)
             @msg = @sg.where("user_id = #{params[:user_id]}")
             @power = @msg.sum(:power)
@@ -66,7 +66,7 @@ class EnergyMeterController < ApplicationController
         @order = Array.new
         for a in 0..6 do  
             @order << @end_date + a
-            @energyMeter = EnergyMeter.where("DATE(date) <= ?",@order[a])
+            @energyMeter = EnergyMeter.where("DATE(date) = ?",@order[a])
             @msg = @energyMeter.where("user_id = #{params[:user_id]}")
             @power = @msg.sum(:power)
             @power_factor = @msg.minimum(:power_factor)
@@ -87,7 +87,7 @@ class EnergyMeterController < ApplicationController
         @user.each do |user|
             for a in 0..6 do  
                 @order << @end_date + a
-                @energyMeter = EnergyMeter.where("DATE(date) <= ?",@order[a])
+                @energyMeter = EnergyMeter.where("DATE(date) = ?",@order[a])
                 @msg = @energyMeter.where("user_id = ?",user)
                 @power = @msg.sum(:power)
                 @power_avg = @power
@@ -109,7 +109,7 @@ class EnergyMeterController < ApplicationController
         @user.each do |user|
             for a in 0..29 do  
                 @order << @end_date + a
-                @energyMeter = EnergyMeter.where("DATE(date) <= ?",@order[a])
+                @energyMeter = EnergyMeter.where("DATE(date) = ?",@order[a])
                 @msg = @energyMeter.where("user_id = ?",user)
                 @power = @msg.sum(:power)
                 @power_avg = @power
@@ -142,7 +142,7 @@ class EnergyMeterController < ApplicationController
         for a in 0..29 do  
             @order << @end_date + a
             # @energyMeter = EnergyMeter.where("DATE(date) <= ?",@order[a])
-            @energyMeter = EnergyMeter.where("DATE(date) <= ?",@order[a])
+            @energyMeter = EnergyMeter.where("DATE(date) = ?",@order[a])
             # @energyMeter = @energyMeter.where("DATE(date) > ?",@end_date)
             @msg = @energyMeter.where("user_id = #{params[:user_id]}")
             @power = @msg.sum(:power)
